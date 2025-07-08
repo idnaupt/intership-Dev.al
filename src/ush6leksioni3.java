@@ -41,7 +41,7 @@ public class ush6leksioni3{
 
         } catch (ArithmeticException e) {
 
-            System.out.println("Gabim: Nuk mund te pjestohet me zero!");
+            System.out.println("Gabim: Nuk mund te pjestohet!");
 
         } finally {
             input.close();
