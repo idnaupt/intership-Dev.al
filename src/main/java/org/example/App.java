@@ -1,9 +1,14 @@
 package org.example;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.example.db.dbConnection;
+import org.example.model.Student;
 
 /**
  * Java application for managing student and course details in a PostgreSQL database.
@@ -86,9 +91,48 @@ public class App {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Example: Handle error with default message
+
             System.err.println("SQL Error: " + StringUtils.defaultString(e.getMessage(), "Unknown error"));
-            // Debug: Check console log for details
+
         }
     }
+}
+     class Appklas {
+        public static void main(String[] args) {
+            dbConnection db = new dbConnection("jdbc:postgresql://localhost:5432/internship","postgres","1234");
+            try {
+                // 1. Krijo tabelën "student"
+                Map<String, String> koloneTip = new HashMap<>();
+                koloneTip.put("id", "INT PRIMARY KEY");
+                koloneTip.put("emri", "VARCHAR(50)");
+                koloneTip.put("mbiemri", "VARCHAR(50)");
+                koloneTip.put("mosha", "INT");
+
+                db.createTable(koloneTip, "student");
+
+                // 2. Shto një student
+                Student s = new Student(1, "Ali", "Berisha", 20);
+                db.insertStudent(s);
+
+                // 3. Merr studentin me ID
+                Student s1 = db.getStudentById(1);
+                if (s1 != null) {
+                    System.out.println("Studenti u gjet: " + s1.getEmri() + " " + s1.getMbiemri());
+                }
+
+                // 4. Përditëso studentin
+                Student updated = new Student(1, "Ali", "Shehu", 21);
+                db.updateStudent(1, updated);
+
+                // 5. Fshi studentin
+                db.deleteStudent(1);
+
+                // 6. Fshi tabelën (opsionale)
+                // db.dropTable("student");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
 }
